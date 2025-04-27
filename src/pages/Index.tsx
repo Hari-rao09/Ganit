@@ -19,23 +19,68 @@ const Index = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
+  // WARNING: This is not secure and only for demonstration purposes
+  // In a production environment, this API key should be stored securely on a backend
+  const API_KEY = "AIzaSyCH_Z4QbjfvJ9kRAPCi-7xxLc6aPr460hY"; // This should NOT be in client-side code
+
   const handleSend = async (message: string) => {
     try {
       setIsLoading(true);
       // Add user message to chat
       setMessages((prev) => [...prev, { content: message, isBot: false }]);
 
-      // For now, we'll use a placeholder response until you connect Gemini
-      const response = "Let me explain this mathematically:\n When we consider the quadratic equation $ax^2 + bx + c = 0$, we can find its solutions using the quadratic formula: $x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}$";
-      
+      // Call Gemini API
+      const response = await fetch(
+        "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=" + API_KEY,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            contents: [
+              {
+                parts: [
+                  {
+                    text: `You are a math assistant that explains mathematical concepts. Use LaTeX notation for equations where appropriate.
+                    
+                    User question: ${message}
+                    
+                    Provide a detailed explanation with LaTeX notation for mathematical expressions. Format complex equations on their own lines using $$ notation.`
+                  }
+                ]
+              }
+            ]
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      const botResponse = data.candidates?.[0]?.content?.parts?.[0]?.text || 
+                          "I couldn't process that. Could you try asking another math question?";
+
       // Add bot response to chat
-      setMessages((prev) => [...prev, { content: response, isBot: true }]);
+      setMessages((prev) => [...prev, { content: botResponse, isBot: true }]);
     } catch (error) {
+      console.error("Error calling Gemini API:", error);
       toast({
         title: "Error",
-        description: "Failed to get response. Please try again.",
+        description: "Failed to get response from Gemini. Please try again.",
         variant: "destructive",
       });
+      
+      // Add fallback response
+      setMessages((prev) => [
+        ...prev, 
+        { 
+          content: "Sorry, I encountered an error. Please try asking another question.", 
+          isBot: true 
+        }
+      ]);
     } finally {
       setIsLoading(false);
     }

@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Square } from 'lucide-react';
+import { Send } from 'lucide-react';
 
 interface ChatInputProps {
   onSend: (message: string) => void;
@@ -30,7 +30,11 @@ const ChatInput = ({ onSend, isLoading }: ChatInputProps) => {
         disabled={isLoading}
       />
       <Button type="submit" disabled={isLoading || !message.trim()}>
-        <Square className="w-4 h-4 mr-2" />
+        {isLoading ? (
+          <div className="w-4 h-4 border-2 border-t-transparent border-white rounded-full animate-spin mr-2" />
+        ) : (
+          <Send className="w-4 h-4 mr-2" />
+        )}
         Send
       </Button>
     </form>
