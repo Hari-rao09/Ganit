@@ -1,8 +1,7 @@
-
 import { useState } from 'react';
 import { useToast } from '@/components/ui/use-toast';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Sparkles } from 'lucide-react';
+import { Sparkles, Calculator, Brain } from 'lucide-react';
 import ChatContainer from '@/components/ChatContainer';
 import { generateMathResponse, fileToBase64, API_KEY } from '@/utils/api';
 import type { Message } from '@/types/chat';
@@ -131,15 +130,41 @@ Provide a step-by-step solution following the format above.`;
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
-      <div className="max-w-4xl mx-auto p-4 space-y-6">
-        <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+    <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-indigo-950 via-purple-950 to-blue-950">
+      <div className="max-w-5xl mx-auto p-4 space-y-8 relative z-10">
+        <div className="text-center space-y-4 animate-fade-in">
+          <div className="flex items-center justify-center gap-3">
+            <Calculator className="w-8 h-8 text-purple-400 animate-bounce" />
+            <Brain className="w-8 h-8 text-indigo-400 animate-bounce" style={{ animationDelay: '0.2s' }} />
+            <Sparkles className="w-8 h-8 text-blue-400 animate-bounce" style={{ animationDelay: '0.4s' }} />
+          </div>
+          <h1 className="text-5xl md:text-6xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 via-pink-500 to-blue-500 drop-shadow-lg animate-gradient-move tracking-widest">
+            <span className="inline-block animate-bounce-slow text-blue-400">G</span>
+            <span className="inline-block animate-bounce-slower text-white">A</span>
+            <span className="inline-block animate-bounce text-blue-400">N</span>
+            <span className="inline-block animate-bounce-slow text-white">I</span>
+            <span className="inline-block animate-bounce-slower text-blue-400">T</span>
+          </h1>
+          <div className="relative">
+            <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 via-blue-500/20 to-pink-500/20 blur-xl rounded-full animate-pulse"></div>
+            <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-white/10 via-transparent to-white/5" />
+            <div className="absolute inset-0 pointer-events-none select-none z-0">
+              {/* Popping animated quotes/formulas */}
+            </div>
+            <p className="relative text-lg max-w-2xl mx-auto px-6 py-3 rounded-full bg-black/50 backdrop-blur-sm border border-purple-500/20">
+              <span className="inline-block animate-typing overflow-hidden whitespace-nowrap border-r-2 border-r-purple-400 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-blue-400 to-pink-400">
+                Ask me anything and you will learn something
+              </span>
+            </p>
+          </div>
+        </div>
+
+        <Card className="border-0 shadow-xl bg-black/50 backdrop-blur-sm transform transition-all duration-300 hover:shadow-2xl">
           <CardHeader className="text-center space-y-2">
-            <CardTitle className="text-3xl font-bold text-blue-900 flex items-center justify-center gap-2">
-              <Sparkles className="w-6 h-6 text-blue-500" />
-              Math Assistant
+            <CardTitle className="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-pink-500 to-blue-500 drop-shadow-lg">
+              Ask Me Buddy.
             </CardTitle>
-            <CardDescription className="text-blue-600">
+            <CardDescription className="text-lg font-semibold text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-blue-400 to-yellow-400 animate-pop">
               Ask any math question or upload an image of a math problem
             </CardDescription>
           </CardHeader>
