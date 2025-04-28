@@ -55,4 +55,3 @@ const ChatContainer = ({ messages, onSend, onImageUpload, isLoading }: ChatProps
 };
 
 export default ChatContainer;
-
