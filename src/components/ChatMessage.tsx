@@ -12,8 +12,10 @@ const ChatMessage = ({ content, isBot }: ChatMessageProps) => {
   return (
     <div
       className={cn(
-        "p-4 rounded-lg max-w-[80%] mb-4",
-        isBot ? "bg-blue-50 mr-auto" : "bg-blue-100 ml-auto"
+        "p-4 rounded-lg max-w-[85%] mb-4 shadow-sm",
+        isBot 
+          ? "bg-blue-50 mr-auto border-l-4 border-blue-400" 
+          : "bg-blue-100 ml-auto"
       )}
     >
       <div className="prose prose-sm">

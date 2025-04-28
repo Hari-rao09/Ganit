@@ -21,11 +21,11 @@ const ChatInput = ({ onSend, isLoading }: ChatInputProps) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex gap-2 p-4 border-t">
+    <form onSubmit={handleSubmit} className="flex gap-2 p-4 border-t rounded-lg shadow-sm bg-white">
       <Input
         value={message}
         onChange={(e) => setMessage(e.target.value)}
-        placeholder="Ask a math question..."
+        placeholder="Type your math question here..."
         className="flex-1"
         disabled={isLoading}
       />
