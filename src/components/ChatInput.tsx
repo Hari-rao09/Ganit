@@ -21,15 +21,19 @@ const ChatInput = ({ onSend, isLoading }: ChatInputProps) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex gap-2 p-4 border-t rounded-lg shadow-sm bg-white">
+    <form onSubmit={handleSubmit} className="flex gap-2 p-4 bg-white rounded-xl shadow-sm border">
       <Input
         value={message}
         onChange={(e) => setMessage(e.target.value)}
         placeholder="Type your math question here..."
-        className="flex-1"
+        className="flex-1 focus-visible:ring-blue-400"
         disabled={isLoading}
       />
-      <Button type="submit" disabled={isLoading || !message.trim()}>
+      <Button 
+        type="submit" 
+        disabled={isLoading || !message.trim()}
+        className="bg-blue-600 hover:bg-blue-700 transition-colors"
+      >
         {isLoading ? (
           <div className="w-4 h-4 border-2 border-t-transparent border-white rounded-full animate-spin mr-2" />
         ) : (

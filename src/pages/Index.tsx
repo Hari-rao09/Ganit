@@ -1,10 +1,11 @@
-
 import { useState, useRef } from 'react';
 import ChatMessage from '@/components/ChatMessage';
 import ChatInput from '@/components/ChatInput';
 import { useToast } from '@/components/ui/use-toast';
 import { Button } from '@/components/ui/button';
-import { Upload } from 'lucide-react';
+import { Upload, Sparkles } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 interface Message {
   content: string;
@@ -22,17 +23,13 @@ const Index = () => {
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // WARNING: This is not secure and only for demonstration purposes
-  // In a production environment, this API key should be stored securely on a backend
-  const API_KEY = "AIzaSyCH_Z4QbjfvJ9kRAPCi-7xxLc6aPr460hY"; // This should NOT be in client-side code
+  const API_KEY = "AIzaSyCH_Z4QbjfvJ9kRAPCi-7xxLc6aPr460hY";
 
   const handleSend = async (message: string) => {
     try {
       setIsLoading(true);
-      // Add user message to chat
       setMessages((prev) => [...prev, { content: message, isBot: false }]);
 
-      // Call Gemini API for text input
       const response = await fetch(
         "https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=" + API_KEY,
         {
@@ -66,7 +63,6 @@ const Index = () => {
       const botResponse = data.candidates?.[0]?.content?.parts?.[0]?.text || 
                           "I couldn't process that. Could you try asking another math question?";
 
-      // Add bot response to chat
       setMessages((prev) => [...prev, { content: botResponse, isBot: true }]);
     } catch (error) {
       console.error("Error calling Gemini API:", error);
@@ -76,7 +72,6 @@ const Index = () => {
         variant: "destructive",
       });
       
-      // Add fallback response
       setMessages((prev) => [
         ...prev, 
         { 
@@ -96,16 +91,13 @@ const Index = () => {
     try {
       setIsLoading(true);
       
-      // Add user message showing the image is being uploaded
       setMessages((prev) => [...prev, { 
         content: `Uploading image: ${file.name}`, 
         isBot: false 
       }]);
       
-      // Convert image to base64
       const base64Image = await fileToBase64(file);
       
-      // Call Gemini API with the image
       const response = await fetch(
         "https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=" + API_KEY,
         {
@@ -141,7 +133,6 @@ const Index = () => {
       const botResponse = data.candidates?.[0]?.content?.parts?.[0]?.text || 
                         "I couldn't extract or solve the math problem from this image. Please try a clearer image or type your question instead.";
 
-      // Add bot response to chat
       setMessages((prev) => [...prev, { content: botResponse, isBot: true }]);
     } catch (error) {
       console.error("Error processing image:", error);
@@ -151,7 +142,6 @@ const Index = () => {
         variant: "destructive",
       });
       
-      // Add fallback response
       setMessages((prev) => [
         ...prev, 
         { 
@@ -161,14 +151,12 @@ const Index = () => {
       ]);
     } finally {
       setIsLoading(false);
-      // Reset the file input
       if (fileInputRef.current) {
         fileInputRef.current.value = '';
       }
     }
   };
 
-  // Helper function to convert file to base64
   const fileToBase64 = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -183,42 +171,56 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col max-w-3xl mx-auto p-4">
-      <header className="text-center mb-8">
-        <h1 className="text-2xl font-bold text-blue-900">Math Assistant</h1>
-        <p className="text-gray-600">Ask me anything about mathematics or upload a math problem</p>
-      </header>
+    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
+      <div className="max-w-4xl mx-auto p-4 space-y-6">
+        <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+          <CardHeader className="text-center space-y-2">
+            <CardTitle className="text-3xl font-bold text-blue-900 flex items-center justify-center gap-2">
+              <Sparkles className="w-6 h-6 text-blue-500" />
+              Math Assistant
+            </CardTitle>
+            <CardDescription className="text-blue-600">
+              Ask any math question or upload an image of a math problem
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <ScrollArea className="h-[60vh] px-4 rounded-lg border bg-white">
+              <div className="space-y-4 p-4">
+                {messages.map((message, index) => (
+                  <ChatMessage
+                    key={index}
+                    content={message.content}
+                    isBot={message.isBot}
+                  />
+                ))}
+              </div>
+            </ScrollArea>
 
-      <div className="flex-1 overflow-y-auto space-y-4 mb-4">
-        {messages.map((message, index) => (
-          <ChatMessage
-            key={index}
-            content={message.content}
-            isBot={message.isBot}
-          />
-        ))}
+            <div className="space-y-4">
+              <div className="flex justify-center">
+                <Button 
+                  variant="outline" 
+                  onClick={triggerFileInput}
+                  disabled={isLoading}
+                  className="flex items-center gap-2 hover:bg-blue-50 transition-colors"
+                >
+                  <Upload className="w-4 h-4" />
+                  Upload Image
+                </Button>
+                <input 
+                  type="file" 
+                  ref={fileInputRef}
+                  onChange={handleFileUpload}
+                  accept="image/*"
+                  className="hidden"
+                />
+              </div>
+              
+              <ChatInput onSend={handleSend} isLoading={isLoading} />
+            </div>
+          </CardContent>
+        </Card>
       </div>
-
-      <div className="flex items-center gap-2 mb-2">
-        <Button 
-          variant="outline" 
-          onClick={triggerFileInput}
-          disabled={isLoading}
-          className="flex items-center gap-2"
-        >
-          <Upload className="w-4 h-4" />
-          Upload Image
-        </Button>
-        <input 
-          type="file" 
-          ref={fileInputRef}
-          onChange={handleFileUpload}
-          accept="image/*"
-          className="hidden"
-        />
-      </div>
-      
-      <ChatInput onSend={handleSend} isLoading={isLoading} />
     </div>
   );
 };
