@@ -4,7 +4,7 @@ import { useToast } from '@/components/ui/use-toast';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Sparkles } from 'lucide-react';
 import ChatContainer from '@/components/ChatContainer';
-import { generateMathResponse, fileToBase64 } from '@/utils/api';
+import { generateMathResponse, fileToBase64, API_KEY } from '@/utils/api';
 import type { Message } from '@/types/chat';
 
 const Index = () => {
@@ -158,3 +158,4 @@ Provide a step-by-step solution following the format above.`;
 };
 
 export default Index;
+

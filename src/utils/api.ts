@@ -40,3 +40,4 @@ export const generateMathResponse = async (prompt: string) => {
   return data.candidates?.[0]?.content?.parts?.[0]?.text || 
          "I couldn't process that. Could you try asking another math question?";
 };
+

@@ -10,3 +10,4 @@ export interface ChatProps {
   onImageUpload: (event: React.ChangeEvent<HTMLInputElement>) => void;
   isLoading: boolean;
 }
+
