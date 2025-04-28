@@ -42,11 +42,20 @@ const Index = () => {
               {
                 parts: [
                   {
-                    text: `You are a math assistant that explains and solves mathematical problems. Use LaTeX notation for equations where appropriate.
-                    
-                    User question: ${message}
-                    
-                    Provide a step-by-step solution with clear explanations. Format complex equations using $$ notation. If applicable, include a final answer clearly marked.`
+                    text: `You are a math assistant that explains and solves mathematical problems with clear, numbered steps. Format your response like this:
+
+Step 1: [First step of the solution]
+Step 2: [Second step]
+Step 3: [Third step]
+...etc.
+
+Use LaTeX notation for mathematical expressions, wrapping them in $$ symbols.
+Make each step clear and concise.
+If there's a final answer, put it in the last step.
+
+User question: ${message}
+
+Provide a step-by-step solution following the format above.`
                   }
                 ]
               }
